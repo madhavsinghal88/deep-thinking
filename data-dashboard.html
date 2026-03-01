@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Dashboard</title>
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #fff;
+      color: #111;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ===== LAYOUT ===== */
+    .dashboard {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    .dashboard__header {
+      margin-bottom: 2rem;
+    }
+
+    .dashboard__title {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .dashboard__subtitle {
+      font-size: 1rem;
+      color: #666;
+      font-weight: 400;
+    }
+
+    /* ===== INPUT SECTION ===== */
+    .input-section {
+      margin-bottom: 2rem;
+    }
+
+    .input-section__label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    .input-section__textarea {
+      width: 100%;
+      min-height: 140px;
+      padding: 1rem;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.875rem;
+      border: 2px solid #e5e5e5;
+      border-radius: 12px;
+      resize: vertical;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      background: #fafafa;
+    }
+
+    .input-section__textarea:focus {
+      outline: none;
+      border-color: #111;
+      box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+      background: #fff;
+    }
+
+    .input-section__textarea::placeholder {
+      color: #999;
+    }
+
+    .input-section__actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.625rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn--primary {
+      background: #111;
+      color: #fff;
+    }
+
+    .btn--primary:hover {
+      background: #333;
+      transform: translateY(-1px);
+    }
+
+    .btn--secondary {
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    .btn--secondary:hover {
+      background: #e5e5e5;
+    }
+
+    /* ===== CONTROLS ===== */
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+      max-width: 400px;
+      position: relative;
+    }
+
+    .search-box__input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.75rem;
+      font-size: 0.875rem;
+      border: 2px solid #e5e5e5;
+      border-radius: 10px;
+      transition: border-color 0.2s ease;
+    }
+
+    .search-box__input:focus {
+      outline: none;
+      border-color: #111;
+    }
+
+    .search-box__icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: #999;
+    }
+
+    .filter-dropdown {
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      border: 2px solid #e5e5e5;
+      border-radius: 10px;
+      background: #fff;
+      cursor: pointer;
+      min-width: 150px;
+    }
+
+    .filter-dropdown:focus {
+      outline: none;
+      border-color: #111;
+    }
+
+    .stats {
+      font-size: 0.875rem;
+      color: #666;
+      margin-left: auto;
+    }
+
+    /* ===== TABLE CONTAINER ===== */
+    .table-container {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .table-container.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ===== TABLE ===== */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 1rem 1.25rem;
+      text-align: left;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .data-table th {
+      background: #fafafa;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #666;
+      position: sticky;
+      top: 0;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .data-table th:hover {
+      background: #f0f0f0;
+    }
+
+    .data-table th .sort-icon {
+      display: inline-block;
+      margin-left: 0.5rem;
+      opacity: 0.3;
+      transition: opacity 0.2s;
+    }
+
+    .data-table th.sorted .sort-icon {
+      opacity: 1;
+    }
+
+    .data-table tbody tr {
+      transition: background 0.15s ease;
+    }
+
+    .data-table tbody tr:hover {
+      background: #fafafa;
+    }
+
+    .data-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* ===== TAGS & BADGES ===== */
+    .tag {
+      display: inline-block;
+      padding: 0.25rem 0.625rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border-radius: 6px;
+      margin: 0.125rem;
+      white-space: nowrap;
+    }
+
+    .tag--skill {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    /* Status badges */
+    .badge {
+      display: inline-block;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 20px;
+      text-transform: capitalize;
+    }
+
+    .badge--green {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge--red {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge--yellow {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge--blue {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .badge--purple {
+      background: #f3e8ff;
+      color: #7c3aed;
+    }
+
+    .badge--gray {
+      background: #f3f4f6;
+      color: #4b5563;
+    }
+
+    /* Tag colors for skills */
+    .tag--color-0 { background: #dbeafe; color: #1e40af; }
+    .tag--color-1 { background: #dcfce7; color: #166534; }
+    .tag--color-2 { background: #fef3c7; color: #92400e; }
+    .tag--color-3 { background: #f3e8ff; color: #7c3aed; }
+    .tag--color-4 { background: #fce7f3; color: #be185d; }
+    .tag--color-5 { background: #fed7aa; color: #c2410c; }
+    .tag--color-6 { background: #ccfbf1; color: #0f766e; }
+    .tag--color-7 { background: #e0e7ff; color: #4338ca; }
+
+    /* Links */
+    .cell-link {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    .cell-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Numbers */
+    .cell-number {
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    /* ===== EMPTY STATE ===== */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #999;
+    }
+
+    .empty-state__icon {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .empty-state__title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state__text {
+      font-size: 0.875rem;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .dashboard {
+        padding: 1.5rem 1rem;
+      }
+
+      .dashboard__title {
+        font-size: 1.5rem;
+      }
+
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-box {
+        max-width: none;
+      }
+
+      .stats {
+        margin-left: 0;
+        text-align: center;
+      }
+
+      .data-table th,
+      .data-table td {
+        padding: 0.75rem 1rem;
+      }
+    }
+
+    /* ===== HIDDEN UTILITY ===== */
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <section class="dashboard">
+    <!-- Header -->
+    <header class="dashboard__header">
+      <h1 class="dashboard__title">Data Dashboard</h1>
+      <p class="dashboard__subtitle">Paste your Excel, CSV, or table data below to visualize it instantly.</p>
+    </header>
+
+    <!-- Input Section -->
+    <div class="input-section">
+      <label class="input-section__label" for="dataInput">Paste your data (Excel, CSV, or tab-separated)</label>
+      <textarea 
+        id="dataInput" 
+        class="input-section__textarea" 
+        placeholder="Name&#9;Company&#9;Role&#9;Skills&#9;Status&#10;John Doe&#9;Acme Inc&#9;Engineer&#9;React, Node&#9;Active&#10;Jane Smith&#9;TechCorp&#9;Designer&#9;Figma, CSS&#9;Pending"
+      ></textarea>
+      <div class="input-section__actions">
+        <button class="btn btn--primary" id="renderBtn">Render Data</button>
+        <button class="btn btn--secondary" id="sampleBtn">Load Sample</button>
+        <button class="btn btn--secondary" id="clearBtn">Clear</button>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls hidden" id="controls">
+      <div class="search-box">
+        <svg class="search-box__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" class="search-box__input" id="searchInput" placeholder="Search all columns...">
+      </div>
+      <select class="filter-dropdown" id="columnFilter">
+        <option value="">All Columns</option>
+      </select>
+      <span class="stats" id="stats"></span>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-container hidden" id="tableContainer">
+      <div class="table-wrapper">
+        <table class="data-table" id="dataTable">
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState">
+      <svg class="empty-state__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M9 17H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <path d="M15 3h4a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4"/>
+        <path d="M12 15v6"/>
+        <path d="m9 18 3 3 3-3"/>
+      </svg>
+      <h3 class="empty-state__title">No data yet</h3>
+      <p class="empty-state__text">Paste your spreadsheet data above and click "Render Data"</p>
+    </div>
+  </section>
+
+  <script>
+    // ===== STATE =====
+    let parsedData = [];
+    let headers = [];
+    let sortColumn = -1;
+    let sortDirection = 'asc';
+    let tagColorMap = new Map();
+    let colorIndex = 0;
+
+    // ===== DOM ELEMENTS =====
+    const dataInput = document.getElementById('dataInput');
+    const renderBtn = document.getElementById('renderBtn');
+    const sampleBtn = document.getElementById('sampleBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const controls = document.getElementById('controls');
+    const searchInput = document.getElementById('searchInput');
+    const columnFilter = document.getElementById('columnFilter');
+    const stats = document.getElementById('stats');
+    const tableContainer = document.getElementById('tableContainer');
+    const tableHead = document.getElementById('tableHead');
+    const tableBody = document.getElementById('tableBody');
+    const emptyState = document.getElementById('emptyState');
+
+    // ===== SAMPLE DATA =====
+    const sampleData = `Name\tCompany\tRole\tSkills\tStatus\tEmail
+John Doe\tAcme Inc\tSenior Engineer\tReact, Node.js, TypeScript\tActive\tjohn@acme.com
+Jane Smith\tTechCorp\tUX Designer\tFigma, Sketch, CSS\tActive\tjane@techcorp.com
+Mike Johnson\tStartupXYZ\tProduct Manager\tAgile, Jira, Analytics\tPending\tmike@startupxyz.com
+Sarah Williams\tBigTech Co\tData Scientist\tPython, ML, TensorFlow\tActive\tsarah@bigtech.com
+Alex Chen\tInnovateLabs\tDevOps Engineer\tAWS, Docker, Kubernetes\tInactive\talex@innovatelabs.com
+Emily Brown\tDesignStudio\tUI Designer\tAdobe XD, Illustrator\tActive\temily@designstudio.com
+Chris Taylor\tCodeFactory\tBackend Developer\tJava, Spring, PostgreSQL\tReview\tchris@codefactory.com
+Lisa Anderson\tCloudNine\tSolutions Architect\tAzure, Terraform, CI/CD\tActive\tlisa@cloudnine.com
+David Kim\tAI Solutions\tML Engineer\tPyTorch, NLP, Computer Vision\tPending\tdavid@aisolutions.com
+Rachel Green\tMediaHub\tContent Strategist\tSEO, Analytics, Copywriting\tActive\trachel@mediahub.com`;
+
+    // ===== UTILITY FUNCTIONS =====
+
+    // Detect delimiter
+    function detectDelimiter(text) {
+      const firstLine = text.split('\n')[0];
+      const delimiters = ['\t', ',', '|', ';'];
+      let maxCount = 0;
+      let detected = '\t';
+
+      for (const d of delimiters) {
+        const count = (firstLine.match(new RegExp(d === '|' ? '\\|' : d, 'g')) || []).length;
+        if (count > maxCount) {
+          maxCount = count;
+          detected = d;
+        }
+      }
+      return detected;
+    }
+
+    // Parse input data
+    function parseData(text) {
+      if (!text.trim()) return { headers: [], rows: [] };
+
+      const delimiter = detectDelimiter(text);
+      const lines = text.trim().split('\n').filter(line => line.trim());
+
+      if (lines.length === 0) return { headers: [], rows: [] };
+
+      const parseRow = (line) => {
+        return line.split(delimiter).map(cell => cell.trim());
+      };
+
+      const headers = parseRow(lines[0]);
+      const rows = lines.slice(1).map(parseRow);
+
+      return { headers, rows };
+    }
+
+    // Detect column type
+    function detectColumnType(header, values) {
+      const headerLower = header.toLowerCase();
+
+      // Status column
+      if (headerLower.includes('status') || headerLower.includes('state')) {
+        return 'status';
+      }
+
+      // Skills/Tags column
+      if (headerLower.includes('skill') || headerLower.includes('tag') || 
+          headerLower.includes('tech') || headerLower.includes('stack')) {
+        return 'tags';
+      }
+
+      // Check if values contain commas (likely tags)
+      const hasCommas = values.some(v => v && v.includes(','));
+      if (hasCommas) return 'tags';
+
+      // Email column
+      if (headerLower.includes('email') || values.some(v => v && v.includes('@'))) {
+        return 'email';
+      }
+
+      // URL column
+      if (headerLower.includes('url') || headerLower.includes('link') ||
+          values.some(v => v && (v.startsWith('http') || v.startsWith('www')))) {
+        return 'url';
+      }
+
+      // Number column
+      const numericValues = values.filter(v => v && !isNaN(parseFloat(v.replace(/[,$%]/g, ''))));
+      if (numericValues.length > values.length * 0.7) {
+        return 'number';
+      }
+
+      return 'text';
+    }
+
+    // Get status badge class
+    function getStatusClass(value) {
+      const v = value.toLowerCase();
+      if (['active', 'complete', 'completed', 'done', 'approved', 'yes', 'success'].some(s => v.includes(s))) {
+        return 'badge--green';
+      }
+      if (['inactive', 'failed', 'error', 'rejected', 'no', 'cancelled'].some(s => v.includes(s))) {
+        return 'badge--red';
+      }
+      if (['pending', 'waiting', 'hold', 'review', 'in progress'].some(s => v.includes(s))) {
+        return 'badge--yellow';
+      }
+      if (['new', 'open', 'started'].some(s => v.includes(s))) {
+        return 'badge--blue';
+      }
+      return 'badge--gray';
+    }
+
+    // Get tag color
+    function getTagColor(tag) {
+      if (!tagColorMap.has(tag)) {
+        tagColorMap.set(tag, colorIndex % 8);
+        colorIndex++;
+      }
+      return `tag--color-${tagColorMap.get(tag)}`;
+    }
+
+    // Format cell based on type
+    function formatCell(value, type) {
+      if (!value) return '<span class="text-muted">-</span>';
+
+      switch (type) {
+        case 'status':
+          return `<span class="badge ${getStatusClass(value)}">${value}</span>`;
+
+        case 'tags':
+          const tags = value.split(/[,;]/).map(t => t.trim()).filter(t => t);
+          return tags.map(tag => `<span class="tag ${getTagColor(tag)}">${tag}</span>`).join('');
+
+        case 'email':
+          return `<a href="mailto:${value}" class="cell-link">${value}</a>`;
+
+        case 'url':
+          const url = value.startsWith('http') ? value : `https://${value}`;
+          return `<a href="${url}" target="_blank" rel="noopener" class="cell-link">${value}</a>`;
+
+        case 'number':
+          return `<span class="cell-number">${value}</span>`;
+
+        default:
+          return escapeHtml(value);
+      }
+    }
+
+    // Escape HTML
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ===== RENDER FUNCTIONS =====
+
+    function renderTable() {
+      const { headers: h, rows } = parseData(dataInput.value);
+
+      if (h.length === 0 || rows.length === 0) {
+        showEmptyState();
+        return;
+      }
+
+      headers = h;
+      parsedData = rows;
+      tagColorMap.clear();
+      colorIndex = 0;
+
+      // Detect column types
+      const columnTypes = headers.map((header, idx) => {
+        const values = parsedData.map(row => row[idx] || '');
+        return detectColumnType(header, values);
+      });
+
+      // Render header
+      tableHead.innerHTML = `
+        <tr>
+          ${headers.map((h, idx) => `
+            <th data-col="${idx}">
+              ${escapeHtml(h)}
+              <span class="sort-icon">↕</span>
+            </th>
+          `).join('')}
+        </tr>
+      `;
+
+      // Populate filter dropdown
+      columnFilter.innerHTML = '<option value="">All Columns</option>' +
+        headers.map((h, idx) => `<option value="${idx}">${escapeHtml(h)}</option>`).join('');
+
+      // Store column types
+      window.columnTypes = columnTypes;
+
+      // Render body
+      renderRows(parsedData);
+
+      // Show table
+      emptyState.classList.add('hidden');
+      controls.classList.remove('hidden');
+      tableContainer.classList.remove('hidden');
+
+      // Animate in
+      requestAnimationFrame(() => {
+        tableContainer.classList.add('visible');
+      });
+
+      updateStats(parsedData.length, parsedData.length);
+    }
+
+    function renderRows(rows) {
+      const columnTypes = window.columnTypes || [];
+
+      tableBody.innerHTML = rows.map(row => `
+        <tr>
+          ${headers.map((_, idx) => `
+            <td>${formatCell(row[idx] || '', columnTypes[idx] || 'text')}</td>
+          `).join('')}
+        </tr>
+      `).join('');
+    }
+
+    function showEmptyState() {
+      tableContainer.classList.add('hidden');
+      tableContainer.classList.remove('visible');
+      controls.classList.add('hidden');
+      emptyState.classList.remove('hidden');
+    }
+
+    function updateStats(showing, total) {
+      stats.textContent = showing === total 
+        ? `${total} rows` 
+        : `Showing ${showing} of ${total} rows`;
+    }
+
+    // ===== SEARCH & FILTER =====
+
+    function filterAndSearch() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const filterCol = columnFilter.value;
+
+      let filtered = parsedData;
+
+      // Column filter
+      if (filterCol !== '') {
+        const colIdx = parseInt(filterCol);
+        filtered = filtered.filter(row => row[colIdx] && row[colIdx].trim());
+      }
+
+      // Search
+      if (searchTerm) {
+        filtered = filtered.filter(row => 
+          row.some(cell => cell && cell.toLowerCase().includes(searchTerm))
+        );
+      }
+
+      // Sort
+      if (sortColumn >= 0) {
+        filtered = [...filtered].sort((a, b) => {
+          const aVal = (a[sortColumn] || '').toLowerCase();
+          const bVal = (b[sortColumn] || '').toLowerCase();
+
+          // Try numeric sort
+          const aNum = parseFloat(aVal.replace(/[,$%]/g, ''));
+          const bNum = parseFloat(bVal.replace(/[,$%]/g, ''));
+
+          if (!isNaN(aNum) && !isNaN(bNum)) {
+            return sortDirection === 'asc' ? aNum - bNum : bNum - aNum;
+          }
+
+          // String sort
+          if (sortDirection === 'asc') {
+            return aVal.localeCompare(bVal);
+          }
+          return bVal.localeCompare(aVal);
+        });
+      }
+
+      renderRows(filtered);
+      updateStats(filtered.length, parsedData.length);
+    }
+
+    // ===== SORT =====
+
+    function handleSort(colIdx) {
+      if (sortColumn === colIdx) {
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortColumn = colIdx;
+        sortDirection = 'asc';
+      }
+
+      // Update header styles
+      document.querySelectorAll('.data-table th').forEach((th, idx) => {
+        th.classList.toggle('sorted', idx === colIdx);
+        const icon = th.querySelector('.sort-icon');
+        if (idx === colIdx) {
+          icon.textContent = sortDirection === 'asc' ? '↑' : '↓';
+        } else {
+          icon.textContent = '↕';
+        }
+      });
+
+      filterAndSearch();
+    }
+
+    // ===== EVENT LISTENERS =====
+
+    renderBtn.addEventListener('click', renderTable);
+
+    sampleBtn.addEventListener('click', () => {
+      dataInput.value = sampleData;
+      renderTable();
+    });
+
+    clearBtn.addEventListener('click', () => {
+      dataInput.value = '';
+      sortColumn = -1;
+      sortDirection = 'asc';
+      searchInput.value = '';
+      columnFilter.value = '';
+      showEmptyState();
+    });
+
+    searchInput.addEventListener('input', debounce(filterAndSearch, 150));
+    columnFilter.addEventListener('change', filterAndSearch);
+
+    tableHead.addEventListener('click', (e) => {
+      const th = e.target.closest('th');
+      if (th && th.dataset.col !== undefined) {
+        handleSort(parseInt(th.dataset.col));
+      }
+    });
+
+    // Auto-render on paste
+    dataInput.addEventListener('paste', () => {
+      setTimeout(renderTable, 50);
+    });
+
+    // Debounce utility
+    function debounce(fn, delay) {
+      let timeout;
+      return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn(...args), delay);
+      };
+    }
+
+    // Keyboard shortcut: Ctrl/Cmd + Enter to render
+    dataInput.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        renderTable();
+      }
+    });
+  </script>
+</body>
+</html>

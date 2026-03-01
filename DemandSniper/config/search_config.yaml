@@ -1,0 +1,236 @@
+# Search Configuration
+# Targeting SAP EPM, Analytics, and Financial Consulting roles
+
+# Target countries based on market research
+target_country: "United States"
+
+# Countries to monitor (for multi-country scraping)
+countries:
+  - "United States"
+  - "Germany"
+  - "United Kingdom"
+  - "India"
+  - "Canada"
+  - "Australia"
+  - "Switzerland"
+  - "Netherlands"
+  - "United Arab Emirates"
+  - "Singapore"
+
+# SAP EPM & Analytics Skills (comprehensive list)
+skill_keywords:
+  # Core SAP
+  - "SAP"
+  - "SAP EPM"
+  - "SAP Analytics"
+  - "SAP S/4HANA"
+  - "SAP SAC"
+  - "SAP Datasphere"
+  
+  # Financial Planning & Analysis
+  - "Financial Planning"
+  - "FP&A"
+  - "Budgeting"
+  - "Forecasting"
+  - "Driver Based Planning"
+  - "Scenario Analysis"
+  - "What-if Analysis"
+  - "Predictive Planning"
+  
+  # Financial Close & Consolidation
+  - "SAP Group Reporting"
+  - "Financial Consolidation"
+  - "Group Consolidation"
+  - "Financial Close"
+  - "Financial Closing Automation"
+  - "Intercompany Eliminations"
+  - "Statutory Reporting"
+  - "Management Reporting"
+  - "SAP AFC"
+  - "Advanced Financial Closing"
+  
+  # Analytics & BI
+  - "SAP Analytics Cloud"
+  - "Business Intelligence"
+  - "BI Analytics"
+  - "BI Dashboarding"
+  - "Predictive Analytics"
+  - "Predictive Modeling"
+  - "Machine Learning"
+  - "AI Analytics"
+  - "Artificial Intelligence"
+  - "Data Analytics"
+  - "Real-time Analytics"
+  
+  # Data & Integration
+  - "Data Integration"
+  - "Data Modeling"
+  - "Data Governance"
+  - "Enterprise Data Warehouse"
+  - "Business Data Fabric"
+  - "Cloud Migration"
+  - "Cloud Deployment"
+  
+  # Performance Management
+  - "Enterprise Performance Management"
+  - "Performance Analysis"
+  - "Performance Reporting"
+  - "Variance Analysis"
+  
+  # Implementation & Services
+  - "SAP Implementation"
+  - "System Integration"
+  - "Software Services"
+  - "Technical Implementation"
+  - "Solution Implementation"
+  - "SAP Consulting"
+
+# Job titles to target
+job_title_keywords:
+  # SAP EPM Roles
+  - "SAP EPM Consultant"
+  - "SAP EPM Architect"
+  - "SAP EPM Manager"
+  - "SAP EPM Lead"
+  - "SAP EPM Developer"
+  
+  # SAP Analytics Roles
+  - "SAP Analytics Cloud Consultant"
+  - "SAP SAC Consultant"
+  - "SAP Analytics Architect"
+  - "SAP BI Consultant"
+  - "SAP BI Developer"
+  
+  # SAP Datasphere
+  - "SAP Datasphere Consultant"
+  - "SAP Data Architect"
+  - "SAP Data Engineer"
+  - "SAP Data Modeler"
+  
+  # Financial Planning
+  - "SAP FP&A Consultant"
+  - "Financial Planning Analyst"
+  - "SAP Planning Consultant"
+  - "SAP BPC Consultant"
+  
+  # Financial Close
+  - "SAP Group Reporting Consultant"
+  - "SAP Financial Consolidation Consultant"
+  - "SAP Closing Consultant"
+  - "SAP AFC Consultant"
+  
+  # General SAP
+  - "SAP Architect"
+  - "SAP Technical Architect"
+  - "SAP Solution Architect"
+  - "SAP Enterprise Architect"
+  - "SAP S/4HANA Architect"
+  
+  # Consulting
+  - "SAP Consultant"
+  - "Senior SAP Consultant"
+  - "Principal SAP Consultant"
+  - "SAP Managing Consultant"
+  
+  # Implementation
+  - "SAP Implementation Lead"
+  - "SAP Implementation Manager"
+  - "SAP Project Manager"
+  - "SAP Program Manager"
+  
+  # Support & Enhancement
+  - "SAP Support Analyst"
+  - "SAP Application Support"
+  - "SAP Functional Analyst"
+
+# Platforms by priority (top 5 per region)
+platforms:
+  # Global/Primary
+  - "linkedin"
+  - "indeed"
+  - "dice"
+  # Regional - will be implemented as extensions
+  # UK/EU: glassdoor, adzuna
+  # India: naukri
+  # Singapore: jobstreet
+
+# Search frequency
+search_frequency: "daily"
+
+# Look back period
+date_range_filter: 30
+
+# Maximum results per search
+max_results_per_platform: 200
+
+# Target top N companies
+target_top_companies: 100
+
+# Exclude terms
+exclude_keywords:
+  - "intern"
+  - "junior"
+  - "entry level"
+  - "trainee"
+  - "student"
+  - "part-time"
+
+# Service Keywords (for opportunity detection)
+service_keywords:
+  # Financial Planning Services
+  - "Financial Planning & Analysis"
+  - "FP&A Transformation"
+  - "Planning, Budgeting, Forecasting"
+  - "Driver-based Planning"
+  - "Scenario Modeling"
+  
+  # Financial Close Services
+  - "Financial Close Automation"
+  - "Financial Consolidation"
+  - "Group Reporting"
+  - "Intercompany Reconciliation"
+  - "Close Cycle Optimization"
+  
+  # Analytics Services
+  - "Predictive Analytics"
+  - "BI Dashboarding"
+  - "Real-time Reporting"
+  - "AI-powered Analytics"
+  - "Machine Learning Models"
+  
+  # Implementation Services
+  - "SAP Implementation"
+  - "Cloud Migration"
+  - "System Integration"
+  - "Legacy Migration"
+  - "Solution Architecture"
+  
+  # Support Services
+  - "Application Support"
+  - "System Enhancement"
+  - "Custom Development"
+  - "Training & Enablement"
+
+# Value Propositions (for opportunity scoring)
+value_propositions:
+  # Pain Points
+  pain_points:
+    - "Reduce financial close time by 50%"
+    - "Eliminate manual spreadsheet processes"
+    - "Real-time financial visibility"
+    - "Automated intercompany reconciliations"
+    - "Single source of truth"
+    - "Audit-ready close process"
+    - "Predictive forecasting accuracy"
+    - "Integrated planning across all departments"
+  
+  # Business Outcomes
+  outcomes:
+    - "Improve data accuracy and transparency"
+    - "Accelerate decision-making"
+    - "Reduce operational costs"
+    - "Enhance compliance and audit readiness"
+    - "Enable agile planning"
+    - "Increase forecast reliability"
+    - "Streamline reporting processes"
+    - "Achieve faster time-to-value"

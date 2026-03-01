@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Madhav Singhal - Backend Developer specializing in Java, Spring Boot, and scalable systems">
+  <title>MADHAV SINGHAL | BACKEND DEVELOPER</title>
+  
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- Fonts: Antonio Bold + Archivo Narrow -->
+  <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@700&family=Archivo+Narrow:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Preloader -->
+  <div id="preloader" class="preloader">
+    <div class="preloader__ring"></div>
+    <div class="preloader__text">LOADING</div>
+  </div>
+
+  <!-- Hero Section - 800vh Sticky Scrollytelling -->
+  <section id="hero" class="hero">
+    <div class="hero__sticky">
+      <!-- Ambient Background Canvas (blurred glow) -->
+      <canvas id="ambient-canvas" class="hero__canvas hero__canvas--ambient"></canvas>
+      
+      <!-- Foreground Orbital Canvas (sharp rendering) -->
+      <canvas id="orbital-canvas" class="hero__canvas hero__canvas--orbital"></canvas>
+      
+      <!-- Center Branding -->
+      <div class="hero__branding">
+        <h1 class="hero__title">MADHAV SINGHAL</h1>
+        <p class="hero__subtitle">BACKEND DEVELOPER</p>
+      </div>
+      
+      <!-- Random Info Floating Text -->
+      <div id="random-info" class="hero__info">
+        <span class="hero__info-text"></span>
+      </div>
+      
+      <!-- Scroll Indicator -->
+      <div class="hero__scroll-indicator">
+        <span>SCROLL TO EXPLORE</span>
+        <div class="hero__scroll-arrow"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="section section--first-look">
+    <div class="container">
+      <h2 class="section__headline">CRAFTING SCALABLE BACKENDS</h2>
+      <p class="section__description">
+        Backend Developer passionate about building efficient, maintainable solutions. 
+        Specializing in Java, Spring Boot, and Go with expertise in REST APIs, microservices, 
+        and system design.
+      </p>
+      <div class="section__cta-group">
+        <a href="https://github.com/madhavsinghal88" class="btn btn--primary" target="_blank">VIEW GITHUB</a>
+        <a href="https://www.linkedin.com/in/madhav-singhal-520104213/" class="btn btn--secondary" target="_blank">CONTACT ME</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Showcase - Horizontal Snap Carousel -->
+  <section id="projects" class="section section--collection">
+    <div class="container">
+      <div class="section__header">
+        <h2 class="section__title">PROJECT SHOWCASE</h2>
+        <div class="carousel__nav">
+          <button class="carousel__arrow carousel__arrow--prev" aria-label="Previous">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="carousel__arrow carousel__arrow--next" aria-label="Next">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="carousel" id="carousel">
+      <div class="carousel__track">
+        <!-- Project 1: DebtQ -->
+        <article class="card card--project">
+          <div class="card__image">
+            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=600&fit=crop" alt="DebtQ Finance Tracker" loading="lazy">
+          </div>
+          <div class="card__content">
+            <span class="card__category">CLI / FINTECH</span>
+            <h3 class="card__title">DEBTQ</h3>
+            <p class="card__description">Terminal-based personal finance tracker with Bubble Tea TUI. Track expenses, debts, investments, and savings goals with Obsidian integration.</p>
+            <span class="card__tech">Go, Bubble Tea, Lipgloss, SQLite</span>
+            <a href="https://github.com/madhavsinghal88/debtq" class="btn btn--small" target="_blank">VIEW ON GITHUB</a>
+          </div>
+        </article>
+        
+        <!-- Project 2: SafeTransactAI -->
+        <article class="card card--project">
+          <div class="card__image">
+            <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&h=600&fit=crop" alt="SafeTransactAI" loading="lazy">
+          </div>
+          <div class="card__content">
+            <span class="card__category">BACKEND / AI</span>
+            <h3 class="card__title">SAFETRANSACTION AI</h3>
+            <p class="card__description">AI-powered secure transaction processing system. Intelligent fraud detection and automated security validation for financial systems.</p>
+            <span class="card__tech">Java, Spring Boot, Maven, REST APIs</span>
+            <a href="https://github.com/madhavsinghal88/SafeTransactAI" class="btn btn--small" target="_blank">VIEW ON GITHUB</a>
+          </div>
+        </article>
+        
+        <!-- Project 3: Portfolio Website -->
+        <article class="card card--project">
+          <div class="card__image">
+            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=600&fit=crop" alt="Portfolio Website" loading="lazy">
+          </div>
+          <div class="card__content">
+            <span class="card__category">FULL STACK</span>
+            <h3 class="card__title">PORTFOLIO WEBSITE</h3>
+            <p class="card__description">Modern responsive portfolio website showcasing projects and skills. Built with React, TypeScript, and deployed on Vercel.</p>
+            <span class="card__tech">React, TypeScript, Tailwind CSS, Vite</span>
+            <a href="https://github.com/madhavsinghal88/Madhav-Portfolio-vercel" class="btn btn--small" target="_blank">VIEW ON GITHUB</a>
+          </div>
+        </article>
+        
+        <!-- Project 4: Dotfiles -->
+        <article class="card card--project">
+          <div class="card__image">
+            <img src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=600&h=600&fit=crop" alt="Dotfiles Configuration" loading="lazy">
+          </div>
+          <div class="card__content">
+            <span class="card__category">DEVOPS</span>
+            <h3 class="card__title">DOTFILES</h3>
+            <p class="card__description">Automated development environment setup. Shell scripts and configuration files for quick machine provisioning.</p>
+            <span class="card__tech">Shell, Bash, Zsh, Git</span>
+            <a href="https://github.com/madhavsinghal88/dotfiles" class="btn btn--small" target="_blank">VIEW ON GITHUB</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cinematic Banner -->
+  <section id="banner" class="section section--banner">
+    <div class="banner__background">
+      <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1920&h=1080&fit=crop" alt="AI Technology Abstract" loading="lazy">
+    </div>
+    <div class="banner__content">
+      <h2 class="banner__headline">MAKE IT WORK<br>MAKE IT RIGHT</h2>
+      <p class="banner__text">Building clean, efficient, and maintainable backend systems</p>
+      <a href="https://github.com/madhavsinghal88?tab=repositories" class="btn btn--primary btn--light" target="_blank">VIEW ALL PROJECTS</a>
+    </div>
+  </section>
+
+  <!-- Skills Grid -->
+  <section id="skills" class="section section--essentials section--skills">
+    <div class="container">
+      <h2 class="section__title">TECHNICAL SKILLS</h2>
+      <div class="essentials__grid skills__grid">
+        <!-- Backend Engineering -->
+        <article class="poster skill-card">
+          <div class="skill-card__content">
+            <h3 class="skill-card__title">BACKEND ENGINEERING</h3>
+            <ul class="skill-card__list">
+              <li>Java</li>
+              <li>Spring Boot</li>
+              <li>REST APIs</li>
+              <li>Microservices</li>
+              <li>System Design</li>
+            </ul>
+          </div>
+          <a href="#" class="btn btn--pill">BACKEND</a>
+        </article>
+        
+        <!-- Languages & Tools -->
+        <article class="poster skill-card">
+          <div class="skill-card__content">
+            <h3 class="skill-card__title">LANGUAGES & TOOLS</h3>
+            <ul class="skill-card__list">
+              <li>Go</li>
+              <li>Python</li>
+              <li>Node.js</li>
+              <li>TypeScript</li>
+              <li>Shell Scripting</li>
+            </ul>
+          </div>
+          <a href="#" class="btn btn--pill">LANGUAGES</a>
+        </article>
+        
+        <!-- Databases & DevOps -->
+        <article class="poster skill-card">
+          <div class="skill-card__content">
+            <h3 class="skill-card__title">DATABASES & DEVOPS</h3>
+            <ul class="skill-card__list">
+              <li>PostgreSQL</li>
+              <li>MySQL</li>
+              <li>Redis</li>
+              <li>Docker</li>
+              <li>Git / GitHub</li>
+            </ul>
+          </div>
+          <a href="#" class="btn btn--pill">DEVOPS</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="footer" class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <!-- Column 1 -->
+        <div class="footer__column">
+          <h4 class="footer__heading">NAVIGATION</h4>
+          <ul class="footer__list">
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#banner">Experience</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        
+        <!-- Column 2 -->
+        <div class="footer__column">
+          <h4 class="footer__heading">PROJECTS</h4>
+          <ul class="footer__list">
+            <li><a href="https://github.com/madhavsinghal88/debtq" target="_blank">DebtQ</a></li>
+            <li><a href="https://github.com/madhavsinghal88/SafeTransactAI" target="_blank">SafeTransactAI</a></li>
+            <li><a href="https://github.com/madhavsinghal88/Madhav-Portfolio-vercel" target="_blank">Portfolio</a></li>
+            <li><a href="https://github.com/madhavsinghal88?tab=repositories" target="_blank">View All</a></li>
+          </ul>
+        </div>
+        
+        <!-- Column 3 -->
+        <div class="footer__column">
+          <h4 class="footer__heading">CONNECT</h4>
+          <ul class="footer__list">
+            <li><a href="https://www.linkedin.com/in/madhav-singhal-520104213/" target="_blank">LinkedIn</a></li>
+            <li><a href="https://github.com/madhavsinghal88" target="_blank">GitHub</a></li>
+            <li><a href="mailto:madhavsinghal880@gmail.com">Email</a></li>
+            <li><a href="https://madhav-portfolio-vercel.vercel.app" target="_blank">Portfolio</a></li>
+          </ul>
+        </div>
+        
+        <!-- Column 4 -->
+        <div class="footer__column">
+          <h4 class="footer__heading">RESOURCES</h4>
+          <ul class="footer__list">
+            <li><a href="mailto:madhavsinghal880@gmail.com">Email Me</a></li>
+            <li><a href="https://github.com/madhavsinghal88" target="_blank">GitHub Profile</a></li>
+            <li><a href="https://madhav-portfolio-vercel.vercel.app" target="_blank">Live Portfolio</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer__bottom">
+        <p class="footer__copy">&copy; 2026 MADHAV SINGHAL. All rights reserved.</p>
+        <div class="footer__legal">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Built with Passion</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts (ES6 Modules) -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
