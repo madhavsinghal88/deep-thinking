@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Deep Thinking Mode</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-dark: #0d0d0d;
+      --bg-light: #f5f3ef;
+      --text-dark: #e8e6e3;
+      --text-light: #1a1a1a;
+      --accent-dark: #2a2a2a;
+      --accent-light: #e0ded9;
+      --muted-dark: #555;
+      --muted-light: #888;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+      transition: background-color 0.5s ease, color 0.5s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    body.light-mode {
+      background-color: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    /* Subtle grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+
+    /* Top bar */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 30px;
+      z-index: 100;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+
+    .top-bar:hover {
+      opacity: 1;
+    }
+
+    .clock {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 300;
+      letter-spacing: 1px;
+      color: inherit;
+      opacity: 0.6;
+    }
+
+    .timer-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .timer {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 300;
+      letter-spacing: 1px;
+      opacity: 0.6;
+    }
+
+    .timer.active {
+      opacity: 1;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      background: transparent;
+      border: 1px solid currentColor;
+      color: inherit;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      opacity: 0.5;
+      transition: opacity 0.3s ease;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn:hover {
+      opacity: 1;
+    }
+
+    .btn.active {
+      opacity: 1;
+      background: currentColor;
+    }
+
+    body:not(.light-mode) .btn.active {
+      color: var(--bg-dark);
+    }
+
+    body.light-mode .btn.active {
+      color: var(--bg-light);
+    }
+
+    /* Main thinking area */
+    .thinking-container {
+      width: 100%;
+      max-width: 800px;
+      height: 60vh;
+      padding: 0 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .thinking-area {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      resize: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      line-height: 1.8;
+      color: inherit;
+      text-align: center;
+      caret-color: currentColor;
+    }
+
+    .thinking-area::placeholder {
+      color: inherit;
+      opacity: 0.2;
+    }
+
+    /* Quote */
+    .quote {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 13px;
+      font-weight: 300;
+      opacity: 0.3;
+      font-style: italic;
+      text-align: center;
+      max-width: 400px;
+      transition: opacity 0.5s ease;
+    }
+
+    /* Shortcuts hint */
+    .shortcuts-hint {
+      position: fixed;
+      bottom: 15px;
+      right: 20px;
+      font-size: 10px;
+      opacity: 0.2;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Save indicator */
+    .save-indicator {
+      position: fixed;
+      bottom: 15px;
+      left: 20px;
+      font-size: 10px;
+      opacity: 0;
+      font-family: 'JetBrains Mono', monospace;
+      transition: opacity 0.3s ease;
+    }
+
+    .save-indicator.show {
+      opacity: 0.5;
+    }
+
+    /* Zen Mode */
+    body.zen-mode .top-bar,
+    body.zen-mode .quote,
+    body.zen-mode .shortcuts-hint,
+    body.zen-mode .save-indicator {
+      opacity: 0 !important;
+      pointer-events: none;
+    }
+
+    body.zen-mode .thinking-area {
+      text-align: left;
+    }
+
+    body.zen-mode .thinking-area::placeholder {
+      opacity: 0;
+    }
+
+    /* Zen cursor blink */
+    @keyframes zen-blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .top-bar {
+        padding: 15px 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .thinking-area {
+        font-size: 16px;
+      }
+
+      .thinking-container {
+        padding: 0 20px;
+        height: 50vh;
+      }
+
+      .quote {
+        bottom: 80px;
+        padding: 0 20px;
+        font-size: 12px;
+      }
+
+      .btn {
+        padding: 5px 10px;
+        font-size: 10px;
+      }
+
+      .shortcuts-hint {
+        display: none;
+      }
+    }
+
+    /* Fade in animation */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    body {
+      animation: fadeIn 0.8s ease;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="clock" id="clock">00:00</div>
+    
+    <div class="timer-section">
+      <div class="timer" id="timer">25:00</div>
+      <div class="controls">
+        <button class="btn" id="timerToggle">Start</button>
+        <button class="btn" id="timer25">25m</button>
+        <button class="btn" id="timer50">50m</button>
+        <button class="btn" id="soundToggle">Rain</button>
+        <button class="btn" id="themeToggle">Light</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Thinking Area -->
+  <div class="thinking-container">
+    <textarea 
+      class="thinking-area" 
+      id="thinkingArea" 
+      placeholder="Begin thinking..."
+      spellcheck="false"
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+    ></textarea>
+  </div>
+
+  <!-- Quote -->
+  <div class="quote" id="quote">Deep work produces excellence.</div>
+
+  <!-- Shortcuts Hint -->
+  <div class="shortcuts-hint">ESC clear · Ctrl+S save · F fullscreen · Z zen</div>
+
+  <!-- Save Indicator -->
+  <div class="save-indicator" id="saveIndicator">saved</div>
+
+  <!-- Rain Sound (white noise) -->
+  <audio id="rainSound" loop>
+    <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
+  </audio>
+
+  <script>
+    // State
+    let isDarkMode = true;
+    let isZenMode = false;
+    let timerInterval = null;
+    let timerSeconds = 25 * 60;
+    let isTimerRunning = false;
+    let isSoundPlaying = false;
+    let audioContext = null;
+    let noiseNode = null;
+
+    // Elements
+    const clock = document.getElementById('clock');
+    const timer = document.getElementById('timer');
+    const timerToggle = document.getElementById('timerToggle');
+    const timer25 = document.getElementById('timer25');
+    const timer50 = document.getElementById('timer50');
+    const soundToggle = document.getElementById('soundToggle');
+    const themeToggle = document.getElementById('themeToggle');
+    const thinkingArea = document.getElementById('thinkingArea');
+    const quote = document.getElementById('quote');
+    const saveIndicator = document.getElementById('saveIndicator');
+
+    // Quotes
+    const quotes = [
+      "Deep work produces excellence.",
+      "Think slower, think deeper.",
+      "Clarity comes from stillness.",
+      "Focus is the new intelligence.",
+      "Simplicity is the ultimate sophistication.",
+      "In silence, solutions emerge.",
+      "Master your attention, master your life.",
+      "The obstacle is the way."
+    ];
+
+    // Initialize
+    function init() {
+      updateClock();
+      setInterval(updateClock, 1000);
+      loadSavedContent();
+      loadTheme();
+      rotateQuote();
+      setInterval(rotateQuote, 60000);
+      setupEventListeners();
+      disableRightClick();
+    }
+
+    // Clock
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      clock.textContent = `${hours}:${minutes}`;
+    }
+
+    // Timer
+    function updateTimerDisplay() {
+      const mins = Math.floor(timerSeconds / 60);
+      const secs = timerSeconds % 60;
+      timer.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    function toggleTimer() {
+      if (isTimerRunning) {
+        clearInterval(timerInterval);
+        timerToggle.textContent = 'Start';
+        timer.classList.remove('active');
+      } else {
+        timerInterval = setInterval(() => {
+          timerSeconds--;
+          updateTimerDisplay();
+          if (timerSeconds <= 0) {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            timerToggle.textContent = 'Start';
+            timer.classList.remove('active');
+            notifyTimerEnd();
+          }
+        }, 1000);
+        timerToggle.textContent = 'Pause';
+        timer.classList.add('active');
+      }
+      isTimerRunning = !isTimerRunning;
+    }
+
+    function setTimer(minutes) {
+      clearInterval(timerInterval);
+      isTimerRunning = false;
+      timerSeconds = minutes * 60;
+      updateTimerDisplay();
+      timerToggle.textContent = 'Start';
+      timer.classList.remove('active');
+    }
+
+    function notifyTimerEnd() {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('Deep Thinking', { body: 'Time for a break.', silent: true });
+      }
+    }
+
+    // Theme
+    function toggleTheme() {
+      isDarkMode = !isDarkMode;
+      document.body.classList.toggle('light-mode', !isDarkMode);
+      themeToggle.textContent = isDarkMode ? 'Light' : 'Dark';
+      localStorage.setItem('deepThinking_theme', isDarkMode ? 'dark' : 'light');
+    }
+
+    function loadTheme() {
+      const saved = localStorage.getItem('deepThinking_theme');
+      if (saved === 'light') {
+        isDarkMode = false;
+        document.body.classList.add('light-mode');
+        themeToggle.textContent = 'Dark';
+      }
+    }
+
+    // Zen Mode
+    function toggleZenMode() {
+      isZenMode = !isZenMode;
+      document.body.classList.toggle('zen-mode', isZenMode);
+      if (isZenMode) {
+        thinkingArea.focus();
+      }
+    }
+
+    // Content
+    function saveContent() {
+      localStorage.setItem('deepThinking_content', thinkingArea.value);
+      showSaveIndicator();
+    }
+
+    function loadSavedContent() {
+      const saved = localStorage.getItem('deepThinking_content');
+      if (saved) {
+        thinkingArea.value = saved;
+      }
+    }
+
+    function showSaveIndicator() {
+      saveIndicator.classList.add('show');
+      setTimeout(() => saveIndicator.classList.remove('show'), 1500);
+    }
+
+    function clearScreen() {
+      if (isZenMode) {
+        toggleZenMode();
+      } else {
+        thinkingArea.value = '';
+        saveContent();
+      }
+    }
+
+    // Auto-save
+    let autoSaveTimeout;
+    function autoSave() {
+      clearTimeout(autoSaveTimeout);
+      autoSaveTimeout = setTimeout(saveContent, 1000);
+    }
+
+    // Quote rotation
+    function rotateQuote() {
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      quote.style.opacity = '0';
+      setTimeout(() => {
+        quote.textContent = quotes[randomIndex];
+        quote.style.opacity = '0.3';
+      }, 300);
+    }
+
+    // Sound (White noise generator)
+    function toggleSound() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+
+      if (isSoundPlaying) {
+        if (noiseNode) {
+          noiseNode.disconnect();
+          noiseNode = null;
+        }
+        soundToggle.classList.remove('active');
+      } else {
+        // Create brown noise (more rain-like)
+        const bufferSize = 2 * audioContext.sampleRate;
+        const noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        
+        let lastOut = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          output[i] = (lastOut + (0.02 * white)) / 1.02;
+          lastOut = output[i];
+          output[i] *= 3.5;
+        }
+
+        noiseNode = audioContext.createBufferSource();
+        noiseNode.buffer = noiseBuffer;
+        noiseNode.loop = true;
+
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = 0.15;
+
+        noiseNode.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        noiseNode.start();
+
+        soundToggle.classList.add('active');
+      }
+      isSoundPlaying = !isSoundPlaying;
+    }
+
+    // Fullscreen
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    // Disable right click
+    function disableRightClick() {
+      document.addEventListener('contextmenu', e => e.preventDefault());
+    }
+
+    // Event listeners
+    function setupEventListeners() {
+      timerToggle.addEventListener('click', toggleTimer);
+      timer25.addEventListener('click', () => setTimer(25));
+      timer50.addEventListener('click', () => setTimer(50));
+      soundToggle.addEventListener('click', toggleSound);
+      themeToggle.addEventListener('click', toggleTheme);
+      thinkingArea.addEventListener('input', autoSave);
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        // ESC - clear or exit zen
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          clearScreen();
+        }
+
+        // Ctrl/Cmd + S - save
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+          e.preventDefault();
+          saveContent();
+        }
+
+        // F - fullscreen (only when not typing)
+        if (e.key === 'f' && document.activeElement !== thinkingArea) {
+          e.preventDefault();
+          toggleFullscreen();
+        }
+
+        // Z - zen mode (only when not typing)
+        if (e.key === 'z' && document.activeElement !== thinkingArea) {
+          e.preventDefault();
+          toggleZenMode();
+        }
+      });
+
+      // Request notification permission
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+    }
+
+    // Start
+    init();
+  </script>
+</body>
+</html>
