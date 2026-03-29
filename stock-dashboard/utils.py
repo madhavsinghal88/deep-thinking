@@ -430,7 +430,7 @@ SUPPORTED_STOCKS = {
     },
     
     # Automotive
-    "TATAMOTORS.NS": {
+    "TMCV.NS": {
         "name": "Tata Motors Limited",
         "sector": "Automotive",
         "exchange": "NSE"
